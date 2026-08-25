@@ -8,7 +8,8 @@
 
 {
   imports =
-    [ ./hardware-configuration.nix   # gegenereerd door nixos-generate-config
+    [ ./hardware-configuration.nix
+      ./neovim.nix   # gegenereerd door nixos-generate-config
     ];
 
   # ---- BOOTLOADER ----
@@ -42,6 +43,51 @@
     layout = "us";
     variant = "";
   };
+
+
+  # ---- XFCE THEMA & ICONEN ----
+  # Zet het GTK-thema en iconen vast voor alle gebruikers
+  environment.sessionVariables = {
+    GTK_THEME = "Gruvbox-Dark";
+  };
+
+  # XFCE-specifieke instellingen via xfconf (de XFCE-configuratie-database)
+  # Dit zorgt ervoor dat het thema ook in XFCE zelf wordt toegepast
+  systemd.user.services."xfce-theme-setup" = {
+    description = "Set XFCE theme to Gruvbox";
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.xfce.xfconf}/bin/xfconf-query -c xsettings -p /Net/ThemeName -s 'Gruvbox-Dark'";
+      RemainAfterExit = true;
+    };
+  };
+
+  # Zet ook het icon-thema via xfconf
+  systemd.user.services."xfce-icon-setup" = {
+    description = "Set XFCE icon theme to Gruvbox";
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.xfce.xfconf}/bin/xfconf-query -c xsettings -p /Net/IconThemeName -s 'Gruvbox-Dark'";
+      RemainAfterExit = true;
+    };
+  };
+
+  # XFCE terminal met Gruvbox kleuren
+  programs.xfconf = {
+    enable = true;
+    settings = {
+      "xfce4-terminal" = {
+        "color-foreground" = "#ebdbb2";
+        "color-background" = "#282828";
+        "color-palette" = ''#282828;#cc241d;#98971a;#d79921;#458588;#b16286;#689d6a;#a89984;#928374;#fb4934;#b8bb26;#fabd2f;#83a598;#d3869b;#8ec07c;#ebdbb2'';
+      };
+    };
+  };
+
 
   # ---- PRINTEN ----
   services.printing.enable = true;

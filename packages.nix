@@ -25,4 +25,14 @@ with pkgs; [
   ripgrep          # snellere grep
   neofetch         # systeeminformatie (voor de lol)
   nix-index        # zoeken in nixpkgs (gebruik `nix-locate`)
+
+  # ---- THEMA & ICONS ----
+  gruvbox-gtk-theme 
+  gruvbox-dark-icons-gtk 
+
+  # ---- CURSOR THEMA
+  capitaine-cursors
+
+  # ---- LETTERTYPE
+  jetbrains-mono
 ]
