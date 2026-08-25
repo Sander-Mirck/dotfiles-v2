@@ -35,4 +35,8 @@ with pkgs; [
 
   # ---- LETTERTYPE
   jetbrains-mono
+
+  
+  ulauncher
+
 ]
