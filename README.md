@@ -1,56 +1,41 @@
-# NixOS dotfiles – v2 (Flake-based)
 
-This repository contains my NixOS configuration, built with **flakes**.  
-It sets up a complete desktop environment (XFCE) with a clean, modular structure.
+# NixOS dotfiles – v2
 
-## 📁 Structure
+Flake-based NixOS configuration with XFCE as the desktop environment.
+
+## Structure
 
 - `configuration.nix` – main system configuration
-- `hardware-configuration.nix` – hardware-specific (auto-generated)
-- `packages.nix` – central list of system-wide packages
+- `hardware-configuration.nix` – auto-generated hardware configuration
+- `packages.nix` – central list of system packages
+- `neovim.nix` – Neovim configuration
 - `flake.nix` – flake definition
-- `flake.lock` – version lock file (commit it!)
+- `flake.lock` – lockfile for reproducible builds
 
-## 🚀 Usage
+## Usage
 
-### 1. Clone (on a new machine)
+Clone the repository and build the system:
 
-```
+```bash
 git clone git@github.com:Sander-Mirck/dotfiles-v2.git /home/sander/nixos
 cd /home/sander/nixos
-```
-
-### 2. Build and switch
-
-```
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-### 3. Optional alias
+Optional alias for `~/.bashrc` or `~/.zshrc`:
 
-Add to your `~/.bashrc` or `~/.zshrc`:
-
-```
+```bash
 alias nr='sudo nixos-rebuild switch --flake /home/sander/nixos#nixos'
 ```
 
-Then run `nr` from anywhere to rebuild.
+## Customization
 
-## 📦 Packages
+- System options: `configuration.nix`
+- Packages: `packages.nix`
+- Neovim: `neovim.nix`
 
-All system packages are managed centrally in `packages.nix`.  
-Highlights:
+Run `nr` after making changes to rebuild the configuration.
 
-- **Browser**: `librewolf` (privacy-focused)
-- **Essentials**: `git`, `vim`, `wget`, `curl`, `btop`, `tree`, `ncdu`, `fd`, `ripgrep`, `nix-index`, etc.
+## License
 
-Add new packages by editing `packages.nix` (inside the `with pkgs; [ ... ]` list).
-
-## 📜 License
-
-MIT – see `LICENSE` for details.
-
----
-
-*Made with ❤️ by Sander Mirck*
-```
+MIT – see `LICENSE`.

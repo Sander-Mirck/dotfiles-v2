@@ -43,5 +43,8 @@
 
     # ---- LAUNCHER ----
     ulauncher
+
+    # ---- CLIPBOARD ----
+    xclip
   ];
 }
