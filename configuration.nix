@@ -9,7 +9,8 @@
 {
   imports =
     [ ./hardware-configuration.nix
-      ./neovim.nix   # gegenereerd door nixos-generate-config
+      ./neovim.nix
+      ./packages.nix
     ];
 
   # ---- BOOTLOADER ----
@@ -44,7 +45,6 @@
     variant = "";
   };
 
-
   # ---- XFCE THEMA & ICONEN ----
   # Zet het GTK-thema en iconen vast voor alle gebruikers
   environment.sessionVariables = {
@@ -52,7 +52,6 @@
   };
 
   # XFCE-specifieke instellingen via xfconf (de XFCE-configuratie-database)
-  # Dit zorgt ervoor dat het thema ook in XFCE zelf wordt toegepast
   systemd.user.services."xfce-theme-setup" = {
     description = "Set XFCE theme to Gruvbox";
     wantedBy = [ "graphical-session.target" ];
@@ -64,7 +63,6 @@
     };
   };
 
-  # Zet ook het icon-thema via xfconf
   systemd.user.services."xfce-icon-setup" = {
     description = "Set XFCE icon theme to Gruvbox";
     wantedBy = [ "graphical-session.target" ];
@@ -76,38 +74,24 @@
     };
   };
 
-
-
   # ---- PRINTEN ----
   services.printing.enable = true;
 
   # ---- GELUID (PipeWire) ----
-  # PulseAudio is expliciet uit (PipeWire draait)
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # jack.enable = true;   # alleen als je JACK nodig hebt
   };
-
-  # ---- TOUCHPAD (standaard ingeschakeld in XFCE) ----
-  # services.xserver.libinput.enable = true;   # meestal niet nodig
 
   # ---- GEBRUIKERS ----
   users.users."sander" = {
     isNormalUser = true;
     description  = "Sander Mirck";
     extraGroups  = [ "networkmanager" "wheel" ];
-    # Gebruikerspecifieke packages kunnen hier, maar we beheren ze centraal in packages.nix
   };
-
-  # ---- PAKKETTEN (centraal beheerd) ----
-  environment.systemPackages = (import ./packages.nix) { inherit pkgs; };
-
-  # ---- FIREFOX VERWIJDERD (Librewolf vervangt het) ----
-  # programs.firefox.enable = false;   # overbodig, staat standaard uit
 
   # ---- ONVRIJE PAKKETTEN TOESTAAN ----
   nixpkgs.config.allowUnfree = true;
@@ -115,6 +99,6 @@
   # ---- FLAKES ONDERSTEUNING ----
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # ---- SYSTEEMVERSIE (blijf bij 24.11) ----
+  # ---- SYSTEEMVERSIE ----
   system.stateVersion = "24.11";
 }

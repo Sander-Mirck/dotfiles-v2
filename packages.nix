@@ -2,42 +2,42 @@
 # Centrale pakkettenlijst voor het hele systeem
 # ==========================================================
 
+{ pkgs, ... }:
 
-{ pkgs }:
+{
+  environment.systemPackages = with pkgs; [
+    # ---- WEB BROWSERS & EDITORS ----
+    librewolf        # privacy-vriendelijke Firefox-fork
+    (vscodium.override {
+      commandLineArgs = "--enable-features=UseOzonePlatform --ozone-platform=x11";
+    })
 
-with pkgs; [
+    # ---- ESSENTIËLE COMMANDO'S ----
+    git              # versiebeheer
+    wget             # bestanden downloaden
+    curl             # HTTP-requests
+    btop             # moderne versie van htop (mooier)
+    tree             # directory-structuur tonen
+    unzip            # .zip uitpakken
+    gzip             # compressie
+    ncdu             # schijfruimte analyseren (ncurses)
+    rsync            # efficiënt synchroniseren
+    fd               # snellere find
+    ripgrep          # snellere grep
+    fastfetch        # actieve en snellere opvolger van neofetch
+    nix-index        # zoeken in nixpkgs (gebruik `nix-locate`)
 
-  # ---- WEB BROWSERS ----
-  librewolf        # privacy-vriendelijke Firefox-fork
-  vscodium
+    # ---- THEMA & ICONS ----
+    gruvbox-gtk-theme 
+    gruvbox-dark-icons-gtk 
 
-  # ---- ESSENTIËLE COMMANDO'S ----
-  git              # versiebeheer
-  vim              # terminal-editor (of vervang door neovim)
-  wget             # bestanden downloaden
-  curl             # HTTP-requests
-  btop             # moderne versie van htop (mooier)
-  tree             # directory-structuur tonen
-  unzip            # .zip uitpakken
-  gzip             # compressie
-  ncdu             # schijfruimte analyseren (ncurses)
-  rsync            # efficiënt synchroniseren
-  fd               # snellere find
-  ripgrep          # snellere grep
-  neofetch         # systeeminformatie (voor de lol)
-  nix-index        # zoeken in nixpkgs (gebruik `nix-locate`)
+    # ---- CURSOR THEMA ----
+    capitaine-cursors
 
-  # ---- THEMA & ICONS ----
-  gruvbox-gtk-theme 
-  gruvbox-dark-icons-gtk 
+    # ---- LETTERTYPE ----
+    jetbrains-mono
 
-  # ---- CURSOR THEMA
-  capitaine-cursors
-
-  # ---- LETTERTYPE
-  jetbrains-mono
-
-  
-  ulauncher
-
-]
+    # ---- LAUNCHER ----
+    ulauncher
+  ];
+}
