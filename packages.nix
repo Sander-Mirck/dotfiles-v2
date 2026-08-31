@@ -9,6 +9,7 @@ with pkgs; [
 
   # ---- WEB BROWSERS ----
   librewolf        # privacy-vriendelijke Firefox-fork
+  vscodium
 
   # ---- ESSENTIËLE COMMANDO'S ----
   git              # versiebeheer
