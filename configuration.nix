@@ -36,6 +36,33 @@
     LC_TIME        = "nl_NL.UTF-8";
   };
 
+  # ---- ENERGIEBEHEER & BATTERIJ OPTIMALISATIE ----
+  # Schakel TLP in voor geavanceerd stroombeheer
+  services.tlp = {
+    enable = true;
+    settings = {
+      # CPU instellingen
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+
+      # Schakel CPU boost uit op batterij om piekverbruik en warmte te beperken
+      CPU_BOOST_ON_AC = 1;
+      CPU_BOOST_ON_BAT = 0;
+
+      # Schakel USB auto-suspend in op batterij
+      USB_AUTOSUSPEND = 1;
+    };
+  };
+
+  # Automatische Powertop tuning bij het opstarten
+  powerManagement.powertop.enable = true;
+
+  # Thermald voorkomt oververhitting en schaalt de CPU efficiënt af (aanrader voor Intel)
+  services.thermald.enable = true;
+
   # ---- X11 / DESKTOP (XFCE) ----
   services.xserver.enable = true;
   services.xserver.displayManager.lightdm.enable = true;

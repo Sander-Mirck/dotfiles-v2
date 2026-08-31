@@ -27,6 +27,10 @@
     fastfetch        # actieve en snellere opvolger van neofetch
     nix-index        # zoeken in nixpkgs (gebruik `nix-locate`)
 
+    # ---- ENERGIE & BATTERIJ TOOLS ----
+    powertop         # analyseer en beheer het energieverbruik van processen
+    acpi             # eenvoudige batterijstatus via terminal
+
     # ---- THEMA & ICONS ----
     gruvbox-gtk-theme 
     gruvbox-dark-icons-gtk 
