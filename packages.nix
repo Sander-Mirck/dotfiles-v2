@@ -46,5 +46,8 @@
 
     # ---- CLIPBOARD ----
     xclip
+
+    # ---- OFFICE ----
+    libreoffice
   ];
 }
