@@ -41,9 +41,6 @@
     # ---- LETTERTYPE ----
     jetbrains-mono
 
-    # ---- LAUNCHER ----
-    ulauncher
-
     # ---- CLIPBOARD ----
     xclip
 
