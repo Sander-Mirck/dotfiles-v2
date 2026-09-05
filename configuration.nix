@@ -61,8 +61,8 @@
       xkb.layout = "us";
       displayManager.lightdm.enable = true;
       desktopManager.xfce.enable = true;
-      libinput.enable = true;
     };
+    libinput.enable = true;
 
     printing.enable = true;
     gvfs.enable = true;
