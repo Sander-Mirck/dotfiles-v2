@@ -60,6 +60,7 @@
   nix = {
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
+      accept-flake-config = true;
       auto-optimise-store = true;
       trusted-users = [ "root" "sander" ];
     };
@@ -88,6 +89,29 @@
     upower.enable = true;
     fwupd.enable = true;
     blueman.enable = true;
+
+    picom = {
+      enable = true;
+      backend = "glx";
+      vSync = true;
+      settings = {
+        blur = {
+          method = "dual_kawase";
+          strength = 5;
+          background = true;
+        };
+        corner-radius = 12;
+        rounded-corners-exclude = [
+          "window_type = 'dock'"
+          "window_type = 'desktop'"
+        ];
+        shadow = true;
+        shadow-radius = 15;
+        shadow-opacity = 0.35;
+        fading = true;
+        fade-delta = 8;
+      };
+    };
 
     pipewire = {
       enable = true;
@@ -149,18 +173,24 @@
     enableDefaultPackages = true;
     packages = with pkgs; [
       jetbrains-mono
+      inter
       noto-fonts
       noto-fonts-emoji
+      nerd-fonts.jetbrains-mono
     ];
   };
 
   environment = {
-    sessionVariables.GTK_THEME = "Nordic";
+    sessionVariables = {
+      GTK_THEME = "Colloid-Dark-Nord";
+      XCURSOR_THEME = "Bibata-Modern-Ice";
+      XCURSOR_SIZE = "24";
+    };
     variables.EDITOR = "nvim";
   };
 
   systemd.user.services.xfce-theming = {
-    description = "Apply Nord theme to XFCE";
+    description = "Apply Nord visual upgrade";
     wantedBy = [ "graphical-session.target" ];
     partOf = [ "graphical-session.target" ];
     after = [ "xfconf.service" ];
@@ -169,8 +199,12 @@
       RemainAfterExit = true;
     };
     script = ''
-      ${lib.getExe pkgs.xfce.xfconf} -c xsettings -p /Net/ThemeName -s "Nordic" || true
-      ${lib.getExe pkgs.xfce.xfconf} -c xsettings -p /Net/IconThemeName -s "Nordzy-dark" || true
+      ${lib.getExe pkgs.papirus-folders} -C nordic --theme Papirus-Dark || true
+      ${lib.getExe pkgs.xfce.xfconf} -c xsettings -p /Net/ThemeName -s "Colloid-Dark-Nord" || true
+      ${lib.getExe pkgs.xfce.xfconf} -c xsettings -p /Net/IconThemeName -s "Papirus-Dark" || true
+      ${lib.getExe pkgs.xfce.xfconf} -c xsettings -p /Gtk/CursorThemeName -s "Bibata-Modern-Ice" || true
+      ${lib.getExe pkgs.xfce.xfconf} -c xsettings -p /Gtk/CursorThemeSize -i 24 || true
+      ${lib.getExe pkgs.xfce.xfconf} -c xfwm4 -p /general/theme -s "Colloid-Dark-Nord" || true
     '';
   };
 

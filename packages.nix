@@ -2,10 +2,17 @@
 
 {
   environment.systemPackages = with pkgs; [
+    # --- VISUAL 1000x ---
+    colloid-gtk-theme
+    papirus-icon-theme
+    tela-circle-icon-theme
+    bibata-cursors
+    papirus-folders
+
+    # --- apps ---
     acpi
     bat
     btop
-    capitaine-cursors
     curl
     eza
     fastfetch
@@ -16,8 +23,6 @@
     libreoffice
     ncdu
     nix-index
-    nordic
-    nordzy-icon-theme
     nvd
     pavucontrol
     powertop
