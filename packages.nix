@@ -1,50 +1,38 @@
-# ==========================================================
-# Centrale pakkettenlijst voor het hele systeem
-# ==========================================================
-
 { pkgs, ... }:
 
 {
   environment.systemPackages = with pkgs; [
-    # ---- WEB BROWSERS & EDITORS ----
-    librewolf        # privacy-vriendelijke Firefox-fork
+    librewolf
     (vscodium.override {
       commandLineArgs = "--enable-features=UseOzonePlatform --ozone-platform=x11";
     })
 
-    # ---- ESSENTIËLE COMMANDO'S ----
-    git              # versiebeheer
-    wget             # bestanden downloaden
-    curl             # HTTP-requests
-    btop             # moderne versie van htop (mooier)
-    tree             # directory-structuur tonen
-    unzip            # .zip uitpakken
-    gzip             # compressie
-    ncdu             # schijfruimte analyseren (ncurses)
-    rsync            # efficiënt synchroniseren
-    fd               # snellere find
-    ripgrep          # snellere grep
-    fastfetch        # actieve en snellere opvolger van neofetch
-    nix-index        # zoeken in nixpkgs (gebruik `nix-locate`)
+    git
+    wget
+    curl
+    btop
+    eza
+    bat
+    fd
+    ripgrep
+    tree
+    unzip
+    gzip
+    ncdu
+    rsync
+    fastfetch
+    nix-index
+    xclip
+    pavucontrol
 
-    # ---- ENERGIE & BATTERIJ TOOLS ----
-    powertop         # analyseer en beheer het energieverbruik van processen
-    acpi             # eenvoudige batterijstatus via terminal
+    powertop
+    acpi
 
-    # ---- THEMA & ICONS ----
-    gruvbox-gtk-theme 
-    gruvbox-dark-icons-gtk 
-
-    # ---- CURSOR THEMA ----
+    nordic
+    nordzy-icon-theme
     capitaine-cursors
 
-    # ---- LETTERTYPE ----
-    jetbrains-mono
-
-    # ---- CLIPBOARD ----
-    xclip
-
-    # ---- OFFICE ----
     libreoffice
+    xfce.mousepad
   ];
 }

@@ -1,131 +1,146 @@
-# ======================================================
-# NixOS configuratie – Flake-versie
-# ======================================================
-# Dit bestand wordt gebruikt via de flake in dezelfde map.
-# De hardware-configuratie wordt apart gehouden.
-
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  imports =
-    [ ./hardware-configuration.nix
-      ./neovim.nix
-      ./packages.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    ./packages.nix
+    ./neovim.nix
+  ];
 
-  # ---- BOOTLOADER ----
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10;
+      };
+      efi.canTouchEfiVariables = true;
+    };
+    kernelPackages = pkgs.linuxPackages_latest;
+  };
 
-  # ---- NETWERK ----
-  networking.hostName = "nixos";
-  networking.networkmanager.enable = true;   # Gnome/KDE/automatisch
+  networking = {
+    hostName = "nixos";
+    networkmanager.enable = true;
+  };
 
-  # ---- LOCALE & TIJD ----
   time.timeZone = "Europe/Amsterdam";
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS     = "nl_NL.UTF-8";
-    LC_IDENTIFICATION = "nl_NL.UTF-8";
-    LC_MEASUREMENT = "nl_NL.UTF-8";
-    LC_MONETARY    = "nl_NL.UTF-8";
-    LC_NAME        = "nl_NL.UTF-8";
-    LC_NUMERIC     = "nl_NL.UTF-8";
-    LC_PAPER       = "nl_NL.UTF-8";
-    LC_TELEPHONE   = "nl_NL.UTF-8";
-    LC_TIME        = "nl_NL.UTF-8";
+
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "nl_NL.UTF-8";
+      LC_IDENTIFICATION = "nl_NL.UTF-8";
+      LC_MEASUREMENT = "nl_NL.UTF-8";
+      LC_MONETARY = "nl_NL.UTF-8";
+      LC_NAME = "nl_NL.UTF-8";
+      LC_NUMERIC = "nl_NL.UTF-8";
+      LC_PAPER = "nl_NL.UTF-8";
+      LC_TELEPHONE = "nl_NL.UTF-8";
+      LC_TIME = "nl_NL.UTF-8";
+    };
   };
 
-  # ---- ENERGIEBEHEER & BATTERIJ OPTIMALISATIE ----
-  # Schakel TLP in voor geavanceerd stroombeheer
-  services.tlp = {
-    enable = true;
+  nix = {
     settings = {
-      # CPU instellingen
-      CPU_SCALING_GOVERNOR_ON_AC = "performance";
-      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-
-      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
-
-      # Schakel CPU boost uit op batterij om piekverbruik en warmte te beperken
-      CPU_BOOST_ON_AC = 1;
-      CPU_BOOST_ON_BAT = 0;
-
-      # Schakel USB auto-suspend in op batterij
-      USB_AUTOSUSPEND = 1;
+      experimental-features = [ "nix-command" "flakes" ];
+      auto-optimise-store = true;
+      trusted-users = [ "root" "sander" ];
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 14d";
     };
   };
 
-  # Automatische Powertop tuning bij het opstarten
-  powerManagement.powertop.enable = true;
-
-  # Thermald voorkomt oververhitting en schaalt de CPU efficiënt af (aanrader voor Intel)
-  services.thermald.enable = true;
-
-  # ---- X11 / DESKTOP (XFCE) ----
-  services.xserver.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.xfce.enable = true;
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # ---- XFCE THEMA & ICONEN ----
-  # Zet het GTK-thema en iconen vast voor alle gebruikers
-  environment.sessionVariables = {
-    GTK_THEME = "Gruvbox-Dark";
-  };
-
-  # XFCE-specifieke instellingen via xfconf (de XFCE-configuratie-database)
-  systemd.user.services."xfce-theme-setup" = {
-    description = "Set XFCE theme to Gruvbox";
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.xfce.xfconf}/bin/xfconf-query -c xsettings -p /Net/ThemeName -s 'Gruvbox-Dark'";
-      RemainAfterExit = true;
-    };
-  };
-
-  systemd.user.services."xfce-icon-setup" = {
-    description = "Set XFCE icon theme to Gruvbox";
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.xfce.xfconf}/bin/xfconf-query -c xsettings -p /Net/IconThemeName -s 'Gruvbox-Dark'";
-      RemainAfterExit = true;
-    };
-  };
-
-  # ---- PRINTEN ----
-  services.printing.enable = true;
-
-  # ---- GELUID (PipeWire) ----
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  # ---- GEBRUIKERS ----
-  users.users."sander" = {
-    isNormalUser = true;
-    description  = "Sander Mirck";
-    extraGroups  = [ "networkmanager" "wheel" ];
-  };
-
-  # ---- ONVRIJE PAKKETTEN TOESTAAN ----
   nixpkgs.config.allowUnfree = true;
 
-  # ---- FLAKES ONDERSTEUNING ----
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  services = {
+    xserver = {
+      enable = true;
+      xkb.layout = "us";
+      displayManager.lightdm.enable = true;
+      desktopManager.xfce.enable = true;
+      libinput.enable = true;
+    };
 
-  # ---- SYSTEEMVERSIE ----
+    printing.enable = true;
+    gvfs.enable = true;
+    tumbler.enable = true;
+
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
+
+    power-profiles-daemon.enable = false;
+    tlp = {
+      enable = true;
+      settings = {
+        CPU_SCALING_GOVERNOR_ON_AC = "performance";
+        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+        CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+        CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+        CPU_BOOST_ON_AC = 1;
+        CPU_BOOST_ON_BAT = 0;
+        USB_AUTOSUSPEND = 1;
+        STOP_CHARGE_THRESH_BAT0 = 80;
+      };
+    };
+
+    thermald.enable = true;
+  };
+
+  powerManagement.enable = true;
+  security.rtkit.enable = true;
+  hardware.bluetooth.enable = true;
+
+  programs = {
+    xfconf.enable = true;
+    thunar = {
+      enable = true;
+      plugins = with pkgs.xfce; [ thunar-archive-plugin thunar-volman ];
+    };
+    zsh.enable = true;
+  };
+
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      jetbrains-mono
+      noto-fonts
+      noto-fonts-emoji
+    ];
+  };
+
+  environment = {
+    sessionVariables.GTK_THEME = "Nordic";
+    variables.EDITOR = "nvim";
+  };
+
+  systemd.user.services.xfce-theming = {
+    description = "Apply Nord theme to XFCE";
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    after = [ "xfconf.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      ${lib.getExe pkgs.xfce.xfconf} -c xsettings -p /Net/ThemeName -s "Nordic" || true
+      ${lib.getExe pkgs.xfce.xfconf} -c xsettings -p /Net/IconThemeName -s "Nordzy-dark" || true
+    '';
+  };
+
+  users.users.sander = {
+    isNormalUser = true;
+    description = "Sander Mirck";
+    extraGroups = [ "networkmanager" "wheel" ];
+    shell = pkgs.zsh;
+  };
+
   system.stateVersion = "24.11";
 }

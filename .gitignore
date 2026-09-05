@@ -1,22 +1,6 @@
-# Nix build results
-/result
-/result-*
-/.direnv
-/.envrc
-
-# Editor files
-*.swp
-*.swo
-*~
-.idea/
-.vscode/
-*.iml
-
-# OS junk
-.DS_Store
-Thumbs.db
-
-# Temporary / sensitive
-*.tmp
-*.bak
-*.secret
+result
+result-*
+/boot.bak
+*.qcow2
+direnv/
+.envrc

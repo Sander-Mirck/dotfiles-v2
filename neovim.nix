@@ -6,15 +6,23 @@
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
+    withNodeJs = true;
+    withPython3 = true;
+
     configure = {
       customRC = ''
+        set number
+        set relativenumber
+        set termguicolors
+
         lua << EOF
           vim.o.background = "dark"
-          vim.cmd([[colorscheme gruvbox]])
+          vim.cmd.colorscheme("nord")
         EOF
       '';
+
       packages.myVimPackage = with pkgs.vimPlugins; {
-        start = [ gruvbox-nvim ];
+        start = [ nord-nvim ];
       };
     };
   };
