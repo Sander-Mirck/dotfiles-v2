@@ -1,6 +1,4 @@
 result
 result-*
-/boot.bak
-*.qcow2
-direnv/
+.direnv
 .envrc

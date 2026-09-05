@@ -1,9 +1,11 @@
 {
-  description = "NixOS config - Sander Mirck";
+  description = "NixOS - XFCE + Nord, battery tuned";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+  nixConfig = {
+    experimental-features = [ "nix-command" "flakes" ];
   };
+
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
   outputs = { self, nixpkgs, ... }@inputs: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {

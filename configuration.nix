@@ -16,11 +16,26 @@
       efi.canTouchEfiVariables = true;
     };
     kernelPackages = pkgs.linuxPackages_latest;
+    tmp.cleanOnBoot = true;
+  };
+
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  };
+
+  hardware = {
+    enableAllFirmware = true;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = false;
+    };
   };
 
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
+    firewall.enable = true;
   };
 
   time.timeZone = "Europe/Amsterdam";
@@ -39,6 +54,8 @@
       LC_TIME = "nl_NL.UTF-8";
     };
   };
+
+  console.keyMap = "us";
 
   nix = {
     settings = {
@@ -63,10 +80,14 @@
       desktopManager.xfce.enable = true;
     };
     libinput.enable = true;
+    displayManager.defaultSession = "xfce";
 
     printing.enable = true;
     gvfs.enable = true;
     tumbler.enable = true;
+    upower.enable = true;
+    fwupd.enable = true;
+    blueman.enable = true;
 
     pipewire = {
       enable = true;
@@ -85,25 +106,43 @@
         CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
         CPU_BOOST_ON_AC = 1;
         CPU_BOOST_ON_BAT = 0;
+        CPU_HWP_DYN_BOOST_ON_AC = 1;
+        CPU_HWP_DYN_BOOST_ON_BAT = 0;
         USB_AUTOSUSPEND = 1;
         STOP_CHARGE_THRESH_BAT0 = 80;
       };
     };
 
     thermald.enable = true;
+
+    logind = {
+      lidSwitch = "suspend";
+      lidSwitchExternalPower = "suspend";
+    };
+  };
+
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+
+  security = {
+    polkit.enable = true;
+    rtkit.enable = true;
   };
 
   powerManagement.enable = true;
-  security.rtkit.enable = true;
-  hardware.bluetooth.enable = true;
 
   programs = {
+    dconf.enable = true;
     xfconf.enable = true;
     thunar = {
       enable = true;
       plugins = with pkgs.xfce; [ thunar-archive-plugin thunar-volman ];
     };
     zsh.enable = true;
+    git.enable = true;
   };
 
   fonts = {

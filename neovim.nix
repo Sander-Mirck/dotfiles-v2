@@ -11,16 +11,12 @@
 
     configure = {
       customRC = ''
-        set number
-        set relativenumber
-        set termguicolors
-
+        set number relativenumber termguicolors
         lua << EOF
           vim.o.background = "dark"
           vim.cmd.colorscheme("nord")
         EOF
       '';
-
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [ nord-nvim ];
       };
