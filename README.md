@@ -30,7 +30,6 @@ Alias (`~/.zshrc`):
 alias nr='sudo nixos-rebuild switch --flake ~/nixos#nixos'
 ```
 
-Commit your changes or the `Git tree is dirty` warning stays.
 
 ## License
 MIT
