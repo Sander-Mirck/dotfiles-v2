@@ -1,41 +1,36 @@
+# dotfiles-v2
 
-# NixOS dotfiles – v2
-
-Flake-based NixOS configuration with XFCE as the desktop environment.
+NixOS 25.05 flake — XFCE + Nord + TLP.
 
 ## Structure
+- `configuration.nix` — system, desktop, power
+- `packages.nix` — system packages
+- `neovim.nix` — nvim + nord
+- `hardware-configuration.nix` — generated, don't edit
+- `flake.nix` — inputs
 
-- `configuration.nix` – main system configuration
-- `hardware-configuration.nix` – auto-generated hardware configuration
-- `packages.nix` – central list of system packages
-- `neovim.nix` – Neovim configuration
-- `flake.nix` – flake definition
-- `flake.lock` – lockfile for reproducible builds
-
-## Usage
-
-Clone the repository and build the system:
-
+## Quick start
 ```bash
-git clone git@github.com:Sander-Mirck/dotfiles-v2.git /home/sander/nixos
-cd /home/sander/nixos
+git clone git@github.com:Sander-Mirck/dotfiles-v2.git ~/nixos
+cd ~/nixos
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-Optional alias for `~/.bashrc` or `~/.zshrc`:
-
+## Usage
 ```bash
-alias nr='sudo nixos-rebuild switch --flake /home/sander/nixos#nixos'
+# after changes
+git add -A && sudo nixos-rebuild switch --flake .#nixos
+
+# update all inputs
+nix flake update
 ```
 
-## Customization
+Alias (`~/.zshrc`):
+```bash
+alias nr='sudo nixos-rebuild switch --flake ~/nixos#nixos'
+```
 
-- System options: `configuration.nix`
-- Packages: `packages.nix`
-- Neovim: `neovim.nix`
-
-Run `nr` after making changes to rebuild the configuration.
+Commit your changes or the `Git tree is dirty` warning stays.
 
 ## License
-
-MIT – see `LICENSE`.
+MIT
